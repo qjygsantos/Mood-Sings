@@ -75,20 +75,20 @@ const HomeScreen = () => {
         resizeMode="contain"
       />
       <View style={styles.contentContainer}>
-        <Text style={styles.headerText}>Welcome to Our App</Text>
+        <Text style={styles.headerText}>Mood Sings got you!</Text>
         <Text style={styles.subHeaderText}>
           Explore and Discover Amazing Features
         </Text>
         <View style={styles.featureContainer}>
-          <FeatureItem title="Easy Navigation" icon="🗺️" />
-          <FeatureItem title="Interactive UI" icon="🎨" />
-          <FeatureItem title="Real-time Updates" icon="🔄" />
+          <FeatureItem title="About Us" icon="🗺️" />
+          <FeatureItem title="Playlist on the go!" icon="🎨" />
+          <FeatureItem title="Real-time Hits!" icon="🔄" />
         </View>
         {/* User Input Section */}
         <View style={styles.userInputContainer}>
           <TextInput
             style={styles.userInput}
-            placeholder="How are you feeling today?"
+            placeholder="How are you feeling today? E.g. (HAPPY, SAD, ANGRY, SURPRISE, FEAR)"
             value={userInput}
             onChangeText={(text) => setUserInput(text)}
           />
@@ -118,7 +118,7 @@ const FeatureItem = ({ title, icon }) => (
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1B139',
   },
   headerImage: {
     width: '100%',
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
+    backgroundColor: '#09E683',
   },
   userInput: {
     flex: 1,
@@ -149,6 +150,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 8,
+    fontStyle: 'italic',
   },
   trackContainer: {
     flexDirection: 'row',

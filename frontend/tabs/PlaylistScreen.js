@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
 
 const PlaylistScreen = () => {
   const [playlists, setPlaylists] = useState([
@@ -12,7 +12,7 @@ const PlaylistScreen = () => {
     { id: '7', name: 'Classic Road Trip Songs' },
     { id: '8', name: 'Cooking Jazz & Bossa' },
     { id: '9', name: 'Bossa Nova Covers' },
-    { id: '10', name: 'Michale Buble' },
+    { id: '10', name: 'Michael Buble' },
     { id: '11', name: 'Ratatouille Vibes' },
     { id: '12', name: 'Hot Hits PH' },
     { id: '13', name: 'Slow Dancing' },
@@ -21,10 +21,32 @@ const PlaylistScreen = () => {
 
   const numColumns = 3; // Number of columns per row
 
+  const animatedValue = useRef(new Animated.Value(1)).current;
+
+  const startAnimation = () => {
+    Animated.sequence([
+      Animated.timing(animatedValue, { toValue: 1.1, duration: 100, useNativeDriver: false }),
+      Animated.spring(animatedValue, { toValue: 1, friction: 3, tension: 40, useNativeDriver: false }),
+    ]).start();
+  };
+
   const renderPlaylistItem = ({ item }) => (
-    <TouchableOpacity style={styles.playlistItem} onPress={() => handlePlaylistPress(item)}>
-      <Text style={styles.playlistName}>{item.name}</Text>
-    </TouchableOpacity>
+    <Animated.View
+      style={[
+        styles.playlistItem,
+        {
+          transform: [{ scale: animatedValue }],
+        },
+      ]}
+    >
+      <TouchableOpacity
+        onPress={() => handlePlaylistPress(item)}
+        onPressIn={startAnimation}
+        style={{ flex: 1 }}
+      >
+        <Text style={styles.playlistName}>{item.name}</Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 
   const handlePlaylistPress = (playlist) => {
@@ -34,7 +56,7 @@ const PlaylistScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Select a Playlist</Text>
+      <Text style={styles.header}>Choose your Playlist...</Text>
       <FlatList
         data={playlists}
         keyExtractor={(item) => item.id}
@@ -52,12 +74,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#F1B139',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'green',
   },
   playlistItem: {
     width: itemWidth,
@@ -67,11 +90,14 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: 'green',
     borderRadius: 8,
+    backgroundColor: 'green',
   },
   playlistName: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
+    color: 'white',
+    fontStyle: 'italic',
   },
-}); 
+});
 
 export default PlaylistScreen;
