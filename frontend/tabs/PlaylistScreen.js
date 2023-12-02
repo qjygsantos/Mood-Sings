@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
+import { Linking } from 'react-native';
 
 const PlaylistScreen = () => {
   const [playlists, setPlaylists] = useState([
@@ -52,6 +53,49 @@ const PlaylistScreen = () => {
   const handlePlaylistPress = (playlist) => {
     // Handle the press event, e.g., navigate to the playlist details screen
     console.log(`Selected playlist: ${playlist.name}`);
+
+    if (playlist.id === '1') {
+      Linking.openURL('https://open.spotify.com/playlist/6IKQrtMc4c00YzONcUt7QH?si=408bdd6cc0e244da');
+    }
+    if (playlist.id === '2') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '3') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '4') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '5') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '6') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '7') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '8') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '9') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '10') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '11') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '12') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '13') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
+    if (playlist.id === '14') {
+      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+    }
   };
 
   return (
