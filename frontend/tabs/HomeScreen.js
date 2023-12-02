@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, Button, FlatList, TouchableOpacity, Linking } from 'react-native';
+import { View, Text, StyleSheet, Image, TextInput, Button, FlatList, TouchableOpacity, Linking, ScrollView } from 'react-native';
 import Animated, { Easing, withTiming, useSharedValue } from 'react-native-reanimated';
 
 const HomeScreen = () => {
@@ -68,10 +68,10 @@ const HomeScreen = () => {
   );
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <Animated.Image
-        source={{ uri: albumImages[currentImage] }} // Corrected the source format
-        style={[styles.headerImage, { opacity: opacity.value }]} // Accessed opacity value
+        source={{ uri: albumImages[currentImage] }}
+        style={[styles.headerImage, { opacity: opacity.value }]}
         resizeMode="contain"
       />
       <View style={styles.contentContainer}>
@@ -96,7 +96,7 @@ const HomeScreen = () => {
         </View>
         {/* Recommended Tracks Section */}
         <View>
-          <Text>Recommended Tracks:</Text>
+          <Text style={styles.recommendedTracksHeader}>Recommended Tracks:</Text>
           <FlatList
             data={recommendedTracks}
             keyExtractor={(item) => item.id}
@@ -104,7 +104,7 @@ const HomeScreen = () => {
           />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -182,6 +182,12 @@ const styles = StyleSheet.create({
   },
   featureTitle: {
     marginTop: 5,
+  },
+  recommendedTracksHeader: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginTop: 10,
+    marginBottom: 5,
   },
 });
 
