@@ -20,7 +20,7 @@ const PlaylistScreen = () => {
     { id: '14', name: 'New York Bar Classics' },
   ]);
 
-  const numColumns = 3; // Number of columns per row
+  const numColumns = 1; // Number of columns per row
 
   const animatedValue = useRef(new Animated.Value(1)).current;
 
@@ -112,7 +112,7 @@ const PlaylistScreen = () => {
 };
 
 const { width } = Dimensions.get('window');
-const itemWidth = (width - 80) / 3; // Calculate item width based on the screen width and padding
+const itemWidth = (width - 80) / 4; // Calculate item width based on the screen width and padding
 
 const styles = StyleSheet.create({
   container: {
