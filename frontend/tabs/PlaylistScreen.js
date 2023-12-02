@@ -61,40 +61,40 @@ const PlaylistScreen = () => {
       Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
     }
     if (playlist.id === '3') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DWXRqgorJj26U?si=c61997e7c76f4391');
     }
     if (playlist.id === '4') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DX6R7QUWePReA?si=a0adce4cf3924232');
     }
     if (playlist.id === '5') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DWV7EzJMK2FUI?si=8ce40cd3ccb7443a');
     }
     if (playlist.id === '6') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DX0Yxoavh5qJV?si=eea2d78c841c4902');
     }
     if (playlist.id === '7') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DX9wC1KY45plY?si=8006f1bc5f6c4194');
     }
     if (playlist.id === '8') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/6PWSEAWhrOnaXBDd5zAUQ8?si=cc126604232246ef');
     }
     if (playlist.id === '9') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/16QguuMuZbadn8Ll3exMpS?si=80730881a7b34627');
     }
     if (playlist.id === '10') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/5F9ddZnfk07XIgoavownCO?si=935272b59f884310');
     }
     if (playlist.id === '11') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/6NQtdhcfkhrzH8cw6mEjCZ?si=3ab95d5921d6493f');
     }
     if (playlist.id === '12') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/37i9dQZF1DXcZQSjptOQtk?si=4f0ea85b38f54dca');
     }
     if (playlist.id === '13') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/0j2pTLUXpSRg7kH5hIi8nb?si=1cd0486562d44909');
     }
     if (playlist.id === '14') {
-      Linking.openURL('https://open.spotify.com/playlist/0t2A2rfRHsYVdAPybNGlUN?si=709302ae8c334117');
+      Linking.openURL('https://open.spotify.com/playlist/4nCML7cOgIsamsRdvebFtE?si=6ed6426e15ea4014');
     }
   };
 
