@@ -5,7 +5,7 @@ import { View, Text } from 'react-native';
 const Songlist = () => {
   return (
     <View>
-      <Text>Home Screen</Text>
+      <Text>Song list tab</Text>
     </View>
   );
 };

@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
-import Animated, {
-  Easing,
-  withTiming,
-  useSharedValue,
-  useDerivedValue,
-  withSpring,
-} from 'react-native-reanimated';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View, Text, StyleSheet, Image, TextInput, Button, FlatList, TouchableOpacity, Linking } from 'react-native';
+import Animated, { Easing, withTiming, useSharedValue } from 'react-native-reanimated';
 
 const HomeScreen = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [recommendedTracks, setRecommendedTracks] = useState([]);
+  const [userInput, setUserInput] = useState('');
 
-  // List of different music album images
   const albumImages = [
     require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\brunoMarsAlbum1.jpg'),
     require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\queenAlbum1.jpg'),
     require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\bubleAlbum1.jpg'),
-    // Add more image paths as needed
   ];
 
   const opacity = useSharedValue(1);
@@ -34,11 +27,51 @@ const HomeScreen = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const detectEmotion = async (text) => {
+    try {
+      const response = await fetch('http://localhost:5000/detect-emotion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text }),
+      });
+  
+      if (response.ok) {
+        const data = await response.json();
+        setRecommendedTracks(data.tracks);
+        // Optional: Reset user input after processing
+        setUserInput('');
+      } else {
+        console.error('Error detecting emotion:', response.status);
+      }
+    } catch (error) {
+      console.error('Error detecting emotion:', error.message);
+    }
+  };
+
+  const handleGoButtonPress = () => {
+    // Trigger sentiment analysis when 'Go' button is pressed
+    if (userInput.trim() !== '') {
+      detectEmotion(userInput);
+    }
+  };
+
+  const renderTrack = ({ item }) => (
+    <TouchableOpacity style={styles.trackContainer} onPress={() => Linking.openURL(item.external_urls.spotify)}>
+      <Image source={{ uri: item.album.images[0].url }} style={styles.trackImage} />
+      <View style={styles.trackInfo}>
+        <Text>{item.name} by {item.artists.map((artist) => artist.name).join(', ')}</Text>
+        <Text style={styles.spotifyLink}>Listen on Spotify</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
   return (
     <View style={styles.container}>
       <Animated.Image
-        source={albumImages[currentImage]}
-        style={[styles.headerImage, { opacity: opacity }]}
+        source={{ uri: albumImages[currentImage] }} // Corrected the source format
+        style={[styles.headerImage, { opacity: opacity.value }]} // Accessed opacity value
         resizeMode="contain"
       />
       <View style={styles.contentContainer}>
@@ -50,6 +83,25 @@ const HomeScreen = () => {
           <FeatureItem title="Easy Navigation" icon="🗺️" />
           <FeatureItem title="Interactive UI" icon="🎨" />
           <FeatureItem title="Real-time Updates" icon="🔄" />
+        </View>
+        {/* User Input Section */}
+        <View style={styles.userInputContainer}>
+          <TextInput
+            style={styles.userInput}
+            placeholder="How are you feeling today?"
+            value={userInput}
+            onChangeText={(text) => setUserInput(text)}
+          />
+          <Button title="Go" onPress={handleGoButtonPress} />
+        </View>
+        {/* Recommended Tracks Section */}
+        <View>
+          <Text>Recommended Tracks:</Text>
+          <FlatList
+            data={recommendedTracks}
+            keyExtractor={(item) => item.id}
+            renderItem={renderTrack}
+          />
         </View>
       </View>
     </View>
@@ -85,19 +137,49 @@ const styles = StyleSheet.create({
     color: '#666',
     marginBottom: 20,
   },
+  userInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  userInput: {
+    flex: 1,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 8,
+  },
+  trackContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  trackImage: {
+    width: 50,
+    height: 50,
+    marginRight: 10,
+  },
+  trackInfo: {
+    flex: 1,
+  },
+  spotifyLink: {
+    color: 'blue',
+    textDecorationLine: 'underline',
+  },
   featureContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    marginBottom: 20,
   },
   featureItem: {
     alignItems: 'center',
   },
   featureIcon: {
-    fontSize: 30,
-    marginBottom: 5,
+    fontSize: 24,
   },
   featureTitle: {
-    fontSize: 14,
+    marginTop: 5,
   },
 });
 
