@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS  # Import CORS extension
 import requests
 import base64
+import traceback  # Import traceback module for printing exception details
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -28,9 +29,12 @@ def detect_emotion():
         'Authorization': f'Bearer {get_spotify_access_token()}'
     }
 
-    response = requests.post('https://api.apilayer.com/text_to_emotion', headers=headers, data=user_text.encode("utf-8"))
+    try:
+        # Send the user text to the emotion detection API
+        response = requests.post('https://api.apilayer.com/text_to_emotion', headers=headers, data=user_text.encode("utf-8"))
+        response.raise_for_status()  # Check for HTTP errors
 
-    if response.status_code == 200:
+        # Parse the detected emotions from the API response
         detected_emotions = response.json()
 
         emotion_threshold = 0.5
@@ -52,21 +56,29 @@ def detect_emotion():
                     break
 
         if max_mood:
+            # Get Spotify recommendations based on the detected mood
             recommendations_url = 'https://api.spotify.com/v1/recommendations'
             recommendations_params = {'limit': 10, 'seed_genres': max_mood}
             recommendations_headers = {'Authorization': f'Bearer {get_spotify_access_token()}'}
 
             recommendations_response = requests.get(recommendations_url, params=recommendations_params, headers=recommendations_headers)
+            recommendations_response.raise_for_status()  # Check for HTTP errors
 
-            if recommendations_response.status_code == 200:
-                recommended_tracks = recommendations_response.json().get('tracks')
-                return jsonify({'tracks': recommended_tracks})
-            else:
-                return jsonify({'error': 'Error fetching music recommendations from Spotify.'}), 500
+            recommended_tracks = recommendations_response.json().get('tracks')
+            return jsonify({'tracks': recommended_tracks})
         else:
             return jsonify({'error': 'No specific emotion or mood detected; using default mood or no recommendations available.'}), 400
-    else:
-        return jsonify({'error': 'Emotion detection API error'}), 500
+    except requests.exceptions.HTTPError as e:
+        # Handle the specific HTTPError for "Text too short" from the emotion detection API
+        if response.status_code == 400 and 'Text too short' in response.text:
+            return jsonify({'error': 'Text too short. Minimum length: 10 characters'}), 400
+        else:
+            # Re-raise the exception for other HTTP errors
+            raise
+    except Exception as e:
+        traceback.print_exc()  # Print the full traceback
+        print(response.content)  # Print the content of the emotion detection API response
+        return jsonify({'error': 'Internal Server Error'}), 500
 
 def get_spotify_access_token():
     token_response = requests.post(token_url, data=token_data, headers=token_headers)
@@ -77,4 +89,4 @@ def get_spotify_access_token():
         return None
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='192.168.246.10', port=5000, debug=True)

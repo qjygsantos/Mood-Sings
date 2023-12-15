@@ -1,45 +1,50 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TextInput, Button, FlatList, TouchableOpacity, Linking, ScrollView } from 'react-native';
-import Animated, { Easing, withTiming, useSharedValue } from 'react-native-reanimated';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TextInput,
+  Pressable,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+  Linking,
+} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
-  const [currentImage, setCurrentImage] = useState(0);
   const [recommendedTracks, setRecommendedTracks] = useState([]);
   const [userInput, setUserInput] = useState('');
+  const [displayedText, setDisplayedText] = useState('');
 
-  const albumImages = [
-    require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\brunoMarsAlbum1.jpg'),
-    require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\queenAlbum1.jpg'),
-    require('C:\\Users\\GSori\\OneDrive\\Documents\\4thYear\\EmTech3\\TeamTechDiggersProject\\frontend\\assets\\bubleAlbum1.jpg'),
-  ];
-
-  const opacity = useSharedValue(1);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      opacity.value = withTiming(0, { duration: 500, easing: Easing.ease });
-      setTimeout(() => {
-        setCurrentImage((prevImage) => (prevImage + 1) % albumImages.length);
-        opacity.value = withTiming(1, { duration: 500, easing: Easing.ease });
-      }, 500);
-    }, 3000); // Change image every 3 seconds
-
-    return () => clearInterval(interval);
-  }, []);
-
-  const detectEmotion = async (text) => {
+  // Get the username from AsyncStorage
+  const getUsername = async () => {
     try {
-      const response = await fetch('http://localhost:5000/detect-emotion', {
+      const username = await AsyncStorage.getItem('username');
+      return username;
+    } catch (error) {
+      console.error('Error getting username:', error);
+    }
+  };
+
+  const detectEmotion = async (text, username) => {
+    try {
+      const response = await fetch('http://192.168.246.10:5000/detect-emotion', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, username }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         setRecommendedTracks(data.tracks);
+        // Set the displayed text
+        setDisplayedText(text);
+        // Save the input text to AsyncStorage
+        saveUserInput(text, username);
         // Optional: Reset user input after processing
         setUserInput('');
       } else {
@@ -50,15 +55,37 @@ const HomeScreen = () => {
     }
   };
 
-  const handleGoButtonPress = () => {
-    // Trigger sentiment analysis when 'Go' button is pressed
-    if (userInput.trim() !== '') {
-      detectEmotion(userInput);
+  const saveUserInput = async (text, username) => {
+    try {
+      const storedInputs = await AsyncStorage.getItem(`userInputs_${username}`);
+      const inputs = storedInputs ? JSON.parse(storedInputs) : [];
+      inputs.push(text);
+      await AsyncStorage.setItem(`userInputs_${username}`, JSON.stringify(inputs));
+    } catch (error) {
+      console.error('Error saving user input:', error.message);
+    }
+  };
+
+  const handleGoButtonPress = async () => {
+    if (userInput.trim().length >= 10) {
+      const username = await getUsername();
+      if (username) {
+        detectEmotion(userInput, username);
+      } else {
+        console.warn('Username not found. Please log in.');
+        // Handle the case where the username is not found
+      }
+    } else {
+      console.warn('Text is too short. Minimum length: 10 characters.');
+      // You can provide user feedback or prevent the request here
     }
   };
 
   const renderTrack = ({ item }) => (
-    <TouchableOpacity style={styles.trackContainer} onPress={() => Linking.openURL(item.external_urls.spotify)}>
+    <TouchableOpacity
+      style={styles.trackContainer}
+      onPress={() => Linking.openURL(item.external_urls.spotify)}
+    >
       <Image source={{ uri: item.album.images[0].url }} style={styles.trackImage} />
       <View style={styles.trackInfo}>
         <Text>{item.name} by {item.artists.map((artist) => artist.name).join(', ')}</Text>
@@ -68,43 +95,56 @@ const HomeScreen = () => {
   );
 
   return (
-    <ScrollView style={styles.container}>
-      <Animated.Image
-        source={{ uri: albumImages[currentImage] }}
-        style={[styles.headerImage, { opacity: opacity.value }]}
-        resizeMode="contain"
-      />
-      <View style={styles.contentContainer}>
-        <Text style={styles.headerText}>Mood Sings got you!</Text>
-        <Text style={styles.subHeaderText}>
-          Explore and Discover Amazing Features
-        </Text>
-        <View style={styles.featureContainer}>
-          <FeatureItem title="About Us" icon="🗺️" />
-          <FeatureItem title="Playlist on the go!" icon="🎨" />
-          <FeatureItem title="Real-time Hits!" icon="🔄" />
-        </View>
-        {/* User Input Section */}
-        <View style={styles.userInputContainer}>
-          <TextInput
-            style={styles.userInput}
-            placeholder="How are you feeling today? E.g. (HAPPY, SAD, ANGRY, SURPRISE, FEAR)"
-            value={userInput}
-            onChangeText={(text) => setUserInput(text)}
-          />
-          <Button title="Go" onPress={handleGoButtonPress} />
-        </View>
-        {/* Recommended Tracks Section */}
-        <View>
-          <Text style={styles.recommendedTracksHeader}>Recommended Tracks:</Text>
+    <View style={styles.container}>
+      <ScrollView>
+        <Text style={styles.headerText}>Welcome to Mood Sings</Text>
+
+        <View style={styles.contentContainer}>
+          <Text style={styles.subHeaderText}>Explore and Discover Amazing Features</Text>
+          <View style={styles.featureContainer}>
+            <FeatureItem title="Easy Navigation" icon="🗺️" />
+            <FeatureItem title="Interactive UI" icon="🎨" />
+            <FeatureItem title="Real-time Updates" icon="🔄" />
+          </View>
+
+          {/* User Input Section */}
+          <View style={styles.userInputContainer}>
+            <TextInput
+              style={styles.userInput}
+              multiline={true}
+              placeholder="What's your mood today? E.g. (HAPPY, SAD, ANGRY, SURPRISE, FEAR) must also more than 10 characters"
+              value={userInput}
+              onChangeText={(text) => setUserInput(text)}
+            />
+            <Pressable
+              style={({ pressed }) => [
+                styles.button,
+                { backgroundColor: pressed ? '#097E53' : '#09E683', marginBottom: 10 },
+              ]}
+              onPress={handleGoButtonPress}
+            >
+              <Text style={styles.buttonText}>🎵</Text>
+            </Pressable>
+          </View>
+
+          {/* Display Mood Text Section */}
+          {displayedText !== '' && (
+            <View style={styles.displayedTextContainer}>
+              <Text style={styles.displayedText}>{displayedText}</Text>
+            </View>
+          )}
+
+          {/* Recommended Tracks Section */}
+          <Text style={styles.recommendedText}>Recommended Tracks:</Text>
           <FlatList
             data={recommendedTracks}
             keyExtractor={(item) => item.id}
             renderItem={renderTrack}
+            style={styles.flatListContainer}
           />
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 };
 
@@ -120,9 +160,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F1B139',
   },
-  headerImage: {
-    width: '100%',
-    height: 200,
+  flatListContainer: {
+    flex: 1,
   },
   contentContainer: {
     padding: 20,
@@ -131,17 +170,41 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: '#000',
+    textAlign: 'center',
+    marginTop: 30,
   },
   subHeaderText: {
     fontSize: 16,
-    color: '#666',
+    color: '#000',
     marginBottom: 20,
+    textAlign: 'center',
+  },
+  recommendedText: {
+    fontSize: 18,
+    marginBottom: 10,
+    color: '#000',
+  },
+  featureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  featureItem: {
+    alignItems: 'center',
+  },
+  featureIcon: {
+    fontSize: 24,
+    color: '#000',
+  },
+  featureTitle: {
+    marginTop: 5,
+    color: '#000',
   },
   userInputContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-    backgroundColor: '#09E683',
+    alignItems: 'flex-start',
+    marginBottom: 5,
   },
   userInput: {
     flex: 1,
@@ -150,7 +213,22 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     padding: 8,
-    fontStyle: 'italic',
+    backgroundColor: '#fff',
+    color: '#000',
+  },
+  button: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#000',
+  },
+  flatList: {
+    flex: 1,
   },
   trackContainer: {
     flexDirection: 'row',
@@ -169,25 +247,18 @@ const styles = StyleSheet.create({
     color: 'blue',
     textDecorationLine: 'underline',
   },
-  featureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
+  displayedTextContainer: {
+    marginTop: 20,
+    marginBottom: 10,
+    backgroundColor: '#09E683',
+    borderRadius: 5,
+    padding: 10,
+    borderColor: '#097E53',
+    borderWidth: 1,
   },
-  featureItem: {
-    alignItems: 'center',
-  },
-  featureIcon: {
-    fontSize: 24,
-  },
-  featureTitle: {
-    marginTop: 5,
-  },
-  recommendedTracksHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-    marginBottom: 5,
+  displayedText: {
+    fontSize: 16,
+    color: '#fff',
   },
 });
 

@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, Image, StyleSheet, Modal } from 'react-native';
 import axios from 'axios';
+import { useFonts } from 'expo-font';
 
 function SignUpScreen({ navigation }) {
   const [firstName, setFirstName] = useState('');
@@ -12,6 +13,11 @@ function SignUpScreen({ navigation }) {
   const [alertVisible, setAlertVisible] = useState(false);
   const [alertTitle, setAlertTitle] = useState('');
   const [alertMessage, setAlertMessage] = useState('');
+
+  // Load the IBMPlexMono-Regular font
+  const [fontsLoaded] = useFonts({
+    'IBMPlexMono-Regular': require('../fonts/IBMPlexMono-Regular.ttf'),
+  });
 
   const handleSignup = async () => {
     if (!firstName || !lastName || !username || !password || !retypePassword) {
@@ -30,7 +36,7 @@ function SignUpScreen({ navigation }) {
   
     try {
       // Make a POST request to the server for signup
-      const response = await axios.post('http://localhost:3000/signup', {
+      const response = await axios.post('http://192.168.246.10:3000/signup', {
         firstName,
         lastName,
         username,
@@ -59,6 +65,10 @@ function SignUpScreen({ navigation }) {
   const closeAlert = () => {
     setAlertVisible(false);
   };
+
+  if (!fontsLoaded) {
+    return null; // Fonts are still loading, render a loading indicator or handle it accordingly
+  }
 
   return (
     <View style={styles.container}>
@@ -165,7 +175,7 @@ const styles = StyleSheet.create({
   input: {
     width: 250,
     height: 40,
-    fontFamily: '../fonts/IBMPlexMono-Regular.ttf',
+    fontFamily: 'IBMPlexMono-Regular',
     fontSize: 16,
     backgroundColor: '#F1B139',
     padding: 10,
@@ -181,7 +191,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonText: {
-    fontFamily: '../fonts/IBMPlexMono-Regular.ttf',
+    fontFamily: 'IBMPlexMono-Regular',
     fontSize: 20,
     color: 'black',
   },

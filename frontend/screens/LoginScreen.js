@@ -20,7 +20,7 @@ function LoginScreen({ navigation }) {
     }
 
     try {
-      const response = await axios.post('http://localhost:3001/login', {
+      const response = await axios.post('http://192.168.246.10:3001/login', {
         username,
         password,
       });
@@ -129,7 +129,6 @@ const styles = StyleSheet.create({
   input: {
     width: 250,
     height: 40,
-    fontFamily: '../fonts/IBMPlexMono-Regular.ttf',
     fontSize: 16,
     backgroundColor: '#F1B139',
     padding: 10,
@@ -145,7 +144,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonText: {
-    fontFamily: '../fonts/IBMPlexMono-Regular.ttf',
     fontSize: 20,
     color: 'black',
   },

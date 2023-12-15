@@ -1,3 +1,4 @@
+// lower part
 import React, { useState, useRef } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Dimensions, Animated } from 'react-native';
 import { Linking } from 'react-native';
@@ -18,6 +19,7 @@ const PlaylistScreen = () => {
     { id: '12', name: 'Hot Hits PH' },
     { id: '13', name: 'Slow Dancing' },
     { id: '14', name: 'New York Bar Classics' },
+    // ... (remaining playlists)
   ]);
 
   const numColumns = 1; // Number of columns per row
@@ -53,7 +55,7 @@ const PlaylistScreen = () => {
   const handlePlaylistPress = (playlist) => {
     // Handle the press event, e.g., navigate to the playlist details screen
     console.log(`Selected playlist: ${playlist.name}`);
-
+    // ... (Linking.openURL for each playlist)
     if (playlist.id === '1') {
       Linking.openURL('https://open.spotify.com/playlist/6IKQrtMc4c00YzONcUt7QH?si=408bdd6cc0e244da');
     }
@@ -112,7 +114,7 @@ const PlaylistScreen = () => {
 };
 
 const { width } = Dimensions.get('window');
-const itemWidth = (width - 80) / 4; // Calculate item width based on the screen width and padding
+const itemWidth = width - 40; // Adjusted width for the playlist item
 
 const styles = StyleSheet.create({
   container: {
@@ -130,7 +132,6 @@ const styles = StyleSheet.create({
     width: itemWidth,
     padding: 15,
     marginBottom: 20,
-    marginRight: 10,
     borderWidth: 3,
     borderColor: 'green',
     borderRadius: 8,

@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#9E711E',
   },
   logo: {
-    marginTop: 50,
-    width: 359,
-    height: 292,
+    marginTop: 200,
+    width: 300,
+    height: 235,
   },
   buttonContainer: {
     marginTop: 50,
@@ -67,7 +67,6 @@ const styles = StyleSheet.create({
     borderWidth: 1, 
   },
   buttonText: {
-    fontFamily: '../fonts/IBMPlexMono-Regular.ttf',
     fontSize: 20,
     color: 'black',
   },

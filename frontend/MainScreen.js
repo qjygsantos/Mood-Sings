@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from './tabs/HomeScreen';
 import Songlist from './tabs/Songlist';
 import PlaylistScreen from './tabs/PlaylistScreen';
+import FavouriteScreen from './tabs/FavouriteScreen';
 import MeScreen from './tabs/MeScreen';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -26,6 +27,7 @@ const MainScreen = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="home" size={size} color={color} />
           ),
+          tabBarLabel: '', // Hide the tab name
         }}
       />
       <Tab.Screen
@@ -35,6 +37,7 @@ const MainScreen = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="music" size={size} color={color} />
           ),
+          tabBarLabel: '', // Hide the tab name
         }}
       />
       <Tab.Screen
@@ -44,6 +47,17 @@ const MainScreen = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="list" size={size} color={color} />
           ),
+          tabBarLabel: '', // Hide the tab name
+        }}
+      />
+      <Tab.Screen
+        name="Favourites"
+        component={FavouriteScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Icon name="heart" size={size} color={color} />
+          ),
+          tabBarLabel: '', // Hide the tab name
         }}
       />
       <Tab.Screen
@@ -53,6 +67,7 @@ const MainScreen = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="user" size={size} color={color} />
           ),
+          tabBarLabel: '', // Hide the tab name
         }}
       />
     </Tab.Navigator>
